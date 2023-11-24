@@ -1,10 +1,19 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import axios from "axios";
 import router from "@/router";
 
 const email = ref('')
 const password = ref('')
+
+
+onMounted(() => {
+  const member = localStorage.getItem('member');
+  const accessToken = JSON.parse(member).accessToken;
+  if(accessToken != undefined){
+    router.push({ name: 'DashBoard'})
+  }
+})
 
 function emailRules(v) {
   const reg = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
@@ -33,7 +42,7 @@ const login = () => {
       "password": password.value
     }
   }).then(res => {
-    console.log(res.data)
+    localStorage.setItem('member', JSON.stringify(res.data));
     router.push({ name: 'DashBoard'})
   })
     .catch(reason => {

@@ -16,6 +16,9 @@ import { registerPlugins } from '@/plugins'
 const app = createApp(App)
 axios.defaults.baseURL = 'http://localhost:8080'
 axios.defaults.withCredentials = true;
+const member = localStorage.getItem('member');
+axios.defaults.headers.common['Authorization'] = `Bearer ${JSON.parse(member).accessToken}`;
+
 app.config.globalProperties.axios=axios;
 app.config.globalProperties.foo = 'bar';
 registerPlugins(app)
