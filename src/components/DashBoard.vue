@@ -14,9 +14,5 @@ onMounted(() => {
   }).then(res => {
     console.log(res.data)
   })
-    .catch(reason => {
-      const response = reason.response;
-      console.log(response)
-    })
 })
 </script>

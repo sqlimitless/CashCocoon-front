@@ -9,19 +9,22 @@ const password = ref('')
 
 onMounted(() => {
   const member = localStorage.getItem('member');
-  const accessToken = JSON.parse(member).accessToken;
-  if(accessToken != undefined){
-    router.push({ name: 'DashBoard'})
+  if (member != null) {
+    const accessToken = JSON.parse(member).accessToken;
+    const accessTokenExpireIn = JSON.parse(member).accessTokenExpireIn;
+    if (accessToken != undefined) {
+      router.push({name: 'DashBoard'})
+    }
   }
 })
 
 function emailRules(v) {
   const reg = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
-  return reg.test(v.trim()) || '이메일 형식을 확인하세요'
+  return reg.test(v.trim()) || v.trim() === '' || '이메일 형식을 확인하세요'
 }
 
 const passwordRules = (v) => {
-  return !!v.trim() || '비밀번호를 확인하세요'
+  return !!v.trim() || v.trim() === '' || '비밀번호를 확인하세요'
 }
 
 const login = () => {
@@ -43,20 +46,20 @@ const login = () => {
     }
   }).then(res => {
     localStorage.setItem('member', JSON.stringify(res.data));
-    router.push({ name: 'DashBoard'})
+    router.push({name: 'DashBoard'})
   })
     .catch(reason => {
-    const response = reason.response;
-    if (response.status === 400) {
-      if (response.data === 'email') {
-        alert('등록되지 않은 이메일 입니다.')
-        return
-      } else if (response.data === 'password') {
-        alert('비밀번호가 잘못되었습니다.')
-        return
+      const response = reason.response;
+      if (response.status === 400) {
+        if (response.data === 'email') {
+          alert('등록되지 않은 이메일 입니다.')
+          return
+        } else if (response.data === 'password') {
+          alert('비밀번호가 잘못되었습니다.')
+          return
+        }
       }
-    }
-  })
+    })
 }
 
 
